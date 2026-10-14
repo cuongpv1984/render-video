@@ -12,4 +12,7 @@ Ngày 14 tháng 10 năm 2026, trên Windows với Node.js 24 và Python 3.12:
 
 GitHub CI chạy lại sau khi sửa health command PostgreSQL đã pass cả frontend và backend, bao gồm Docker image build: https://github.com/cuongpv1984/render-video/actions/runs/38526216549
 
-Chưa có provider AI production, chưa có PostgreSQL/R2 cloud được kết nối và chưa có Cloudflare deployment đã xác minh. Không coi build thành công là đã triển khai cloud.
+Cloudflare Pages đã triển khai và xác minh tại https://render-video.pages.dev/ ngày 14 tháng 10 năm 2026. Deployment: https://fe5093b2.render-video.pages.dev
+Đã kiểm tra storyboard và dự toán trên URL production; browser không ghi nhận lỗi console trong smoke check.
+
+Chưa có provider AI production và chưa có PostgreSQL/R2 cloud được kết nối. Bản web hoạt động độc lập ở chế độ thử; backend production chưa triển khai.

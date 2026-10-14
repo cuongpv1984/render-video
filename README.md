@@ -2,6 +2,9 @@
 
 AI Animation Studio V1.1 Balanced Mode, triển khai đầu tiên cho một chủ workspace.
 
+Bản web đang chạy trên Cloudflare Pages: https://render-video.pages.dev/
+Đây là bản studio thử nghiệm; API production và provider AI chưa được kết nối.
+
 Ứng dụng Next.js gồm storyboard, chọn route từng cảnh, dự toán, ngân sách thử, review, sao lưu dự án và xuất WebM thực bằng Canvas. Backend FastAPI dùng PostgreSQL để giữ ngân sách atomically trên scope project và workspace, idempotency, outbox và worker FFmpeg xuất MP4. Cloudflare Pages phục vụ frontend; cấu hình Cloudflare Containers cho backend nằm trong `infra/cloudflare`.
 
 ## Trạng thái chức năng

@@ -19,11 +19,13 @@ Frontend trong bản này là Next.js static export, build tạo HTML/CSS/JS. D�
 npm ci
 npm run build
 npm exec --workspace apps/web -- wrangler login
-npm exec --workspace apps/web -- wrangler pages project create render-video --production-branch main
+npm exec --workspace apps/web -- wrangler pages project create render-video --production-branch main --force
 npm run deploy
 ```
 
 Hoặc chạy workflow `Deploy Cloudflare web` khi đã cấu hình GitHub Secrets `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` (token scope đúng account, Cloudflare Pages Edit). Token không gửi qua chat hay commit repo. Nếu dùng GitHub import trên Cloudflare, không cần token deployment trong GitHub.
+
+Wrangler 4.151.0 có thể chuyển việc tạo project mới sang Workers. `--force` trong lệnh tạo project ở trên giữ việc tạo trên Pages trực tiếp; chỉ dùng cho lần tạo đầu. Các lệnh deploy sau đó không cần `--force`. Project render-video hiện đã được tạo và bản web chạy tại https://render-video.pages.dev/.
 
 ## Backend Containers
 
