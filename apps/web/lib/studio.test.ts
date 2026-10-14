@@ -1,0 +1,8 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {seed,estimate,accept,budget,finishSimulation,cancelRun,routeScene} from "./studio";
+test("router handles motion levels and override",()=>{const s=seed().projects[0].scenes[0]; assert.equal(routeScene(s).route,"motion"); assert.equal(routeScene({...s,motion:3}).route,"hero"); assert.equal(routeScene({...s,route:"standard"}).route,"standard");});
+test("quote reserves full retry ceiling, never only expected",()=>{let s=seed(); const q=estimate(s.projects[0],true); assert.equal(q.base,1_520_000); assert.equal(q.ceiling,3_000_000); s=accept(s,q); assert.equal(budget(s).held,q.ceiling); assert.equal(budget(s,s.projects[0].id).held,q.ceiling); assert.equal(accept(s,q).runs.length,1);});
+test("stale quote and exhausted budget reject",()=>{const s=seed(); const q=estimate(s.projects[0],false,1000); assert.throws(()=>accept(s,q,901000),/hết hạn/); s.projects[0].revision++; assert.throws(()=>accept(s,q,1001),/thay đổi/); const s2=seed(); s2.workspaceBudget=1; assert.throws(()=>accept(s2,estimate(s2.projects[0],false)),/không đủ/);});
+test("simulation releases all hold and has zero paid charge",()=>{let s=seed(); s=accept(s,estimate(s.projects[0],false)); const id=s.runs[0].id; s=finishSimulation(s,id); assert.equal(budget(s).held,0); assert.equal(budget(s).spent,0); assert.equal(finishSimulation(s,id).ledger.length,s.ledger.length);});
+test("cancel releases once and cannot complete cancelled run",()=>{let s=seed(); s=accept(s,estimate(s.projects[0],true)); const id=s.runs[0].id; s=cancelRun(s,id); assert.equal(budget(s).held,0); assert.equal(finishSimulation(s,id).runs[0].state,"cancelled");});

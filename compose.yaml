@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17.6
+    environment:
+      POSTGRES_DB: studio
+      POSTGRES_USER: studio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - studio_pg:/var/lib/postgresql/data
+      - ./db/001_app.sql:/docker-entrypoint-initdb.d/001.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studio -d studio"]
+      interval: 5s
+      retries: 10
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://studio:${POSTGRES_PASSWORD}@postgres:5432/studio
+      STUDIO_OWNER_TOKEN: ${STUDIO_OWNER_TOKEN:?Set STUDIO_OWNER_TOKEN in .env}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://127.0.0.1:3000}
+      WORKSPACE_BUDGET_MICRO_USD: 50000000
+    ports:
+      - "127.0.0.1:8000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - studio_exports:/studio/data
+volumes:
+  studio_pg:
+  studio_exports:
